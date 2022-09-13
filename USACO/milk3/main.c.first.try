@@ -1,0 +1,59 @@
+/*
+ID: thomas.56
+LANG: C
+TASK: milk3
+*/
+#include <assert.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+struct bucket {
+  int size;
+  int milk;
+  int lastmilk;
+};
+struct bucket buckets[3];
+inline void pour(int from, int to) {
+  if(from == to){
+    return;
+  }
+  buckets[from].lastmilk = buckets[from].milk;
+  buckets[to].lastmilk = buckets[to].milk;
+  if (buckets[to].size - buckets[to].milk >= buckets[from].milk) {
+    buckets[to].milk += buckets[from].milk;
+    buckets[from].milk = 0;
+  } else {
+    buckets[from].milk -= buckets[to].size - buckets[to].milk;
+    buckets[to].milk = buckets[to].size;
+  }
+}
+inline void rev_pour(int from, int to) { // not finished
+  if(from == to){
+    return;
+  }
+  buckets[from].milk = buckets[from].lastmilk;
+  buckets[to].milk = buckets[to].lastmilk;
+}
+int main() {
+  FILE *fin = fopen("milk3.in", "r");
+  FILE *fout = fopen("milk3.out", "w");
+
+  if (fscanf(fin, "%d %d %d", &buckets[0].size, &buckets[1].size,
+             &buckets[2].size) != 3) {
+    exit(1);
+  }
+  buckets[0].milk = 0;
+  buckets[1].milk = 0;
+  buckets[2].milk = buckets[2].size;
+  while (1) {
+    for (int i = 0; i < 3; i++) {
+      for(int j = 0; j < 3; j++){
+        pour(i,j);
+      }
+    }
+  }
+  fclose(fin);
+  fclose(fout);
+  exit(EXIT_SUCCESS);
+}
